@@ -1,0 +1,74 @@
+/* WorkflowManage.css */
+
+/* Container for the workflow management page */
+.workflow-management {
+    max-width: 400px; /* Restrict the maximum width */
+    margin: 50px auto;
+    padding: 20px;
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Title styling */
+.workflow-management h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    color: var(--primary-text);
+}
+
+/* List styling for draggable items */
+.workflow-management ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Draggable item styling */
+.workflow-management li {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border: 1px solid var(--primary-text);
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+    cursor: grab; /* Indicate draggable */
+}
+
+/* Draggable item hover state */
+.workflow-management li:hover {
+    background-color: var(--primary-text);
+    color: var(--primary-background);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Button styling */
+.workflow-management .btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: var(--primary-text);
+    color: var(--primary-background);
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Button hover state */
+.workflow-management .btn:hover {
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border: 1px solid var(--primary-text);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,47 @@
+/* HomePage.css */
+
+/* Container for the entire homepage */
+.homepage-ctn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+    background-color: var(--primary-background); /* Themed background */
+    color: var(--primary-text); /* Themed text color */
+}
+
+/* Heading style */
+.homepage-ctn h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-family: 'Lato', sans-serif; /* Using Lato for a modern, clean look */
+    text-align: center;
+    color: var(--primary-text); /* Themed text color */
+}
+
+/* Container for the buttons */
+.button-ctn {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Button styles */
+.btttn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif; /* Consistent font with the heading */
+    background-color: var(--primary-text); /* Themed button background */
+    color: var(--primary-background); /* Themed button text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Button hover effect */
+.btttn:hover {
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border: 1px solid var(--primary-text);
+}

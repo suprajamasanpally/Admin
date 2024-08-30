@@ -1,0 +1,29 @@
+/* Container */
+.thankyou-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title */
+.thankyou-title {
+    font-size: 2.5rem;
+    color: var(--primary-text);
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .thankyou-container {
+        padding: 20px;
+    }
+
+    .thankyou-title {
+        font-size: 2rem;
+    }
+}

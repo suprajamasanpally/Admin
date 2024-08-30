@@ -1,0 +1,126 @@
+.field-manage-container {
+    padding: 20px;
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+  }
+  
+  .field-manage-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .field-manage-error {
+    color: red;
+    margin-bottom: 20px;
+  }
+  
+  .field-manage-select,
+  .field-manage-button,
+  .field-manage-submit-button {
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border: 1px solid var(--primary-text);
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .field-manage-select:hover,
+  .field-manage-button:hover,
+  .field-manage-submit-button:hover {
+    background-color: var(--primary-text);
+    color: var(--primary-background);
+  }
+  
+  .field-manage-form {
+    margin-top: 20px;
+  }
+  
+  .field-manage-label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .field-manage-input,
+  .field-manage-select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid var(--primary-text);
+    border-radius: 4px;
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+  }
+  
+  .field-manage-checkbox {
+    margin-left: 5px;
+  }
+  .field-manage-textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid var(--primary-text);
+    border-radius: 4px;
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    min-height: 100px; /* Adjust based on your design needs */
+}
+  .field-manage-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .field-manage-item {
+    padding: 10px;
+    border-bottom: 1px solid var(--primary-text);
+  }
+  
+  .field-manage-edit-button,
+  .field-manage-delete-button {
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border: 1px solid var(--primary-text);
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .field-manage-edit-button:hover,
+  .field-manage-delete-button:hover {
+    background-color: var(--primary-text);
+    color: var(--primary-background);
+  }
+  
+  .field-manage-options-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .field-manage-option {
+    padding: 2px 0;
+  }
+  
+  .field-manage-loading {
+    font-size: 18px;
+    color: var(--primary-text);
+  }
+  .field-manage-done-button {
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    border: 1px solid var(--primary-text);
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 20px;
+  }
+  
+  .field-manage-done-button:hover {
+    background-color: var(--primary-text);
+    color: var(--primary-background);
+  }
+  

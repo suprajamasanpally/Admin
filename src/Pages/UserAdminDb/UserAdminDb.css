@@ -1,0 +1,39 @@
+/* UserAdminDb.css */
+
+.userpage {
+    padding: 20px;
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .userpage h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .btn {
+    background-color: var(--primary-button-background);
+    color: var(--primary-button-text);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: var(--primary-button-hover-background);
+    color: var(--primary-button-hover-text);
+  }
+  
+  .w-btn {
+    margin-top: 20px;
+  }
+  
+  .w-btn p {
+    font-size: 1rem;
+  }
+  

@@ -1,0 +1,90 @@
+.personal-info-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: var(--primary-background);
+  color: var(--primary-text);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.personal-info-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--primary-text);
+  text-align: center;
+}
+
+.personal-info-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.personal-info-row {
+  margin-bottom: 20px;
+}
+
+.personal-info-input-label {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--primary-text);
+}
+
+.personal-info-input-field {
+  padding: 12px;
+  border: 1px solid var(--primary-text);
+  border-radius: 4px;
+  background-color: var(--primary-background);
+  color: var(--primary-text);
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.personal-info-checkbox {
+  margin-right: 8px;
+}
+
+.personal-info-btn {
+  background-color: var(--primary-background);
+  color: var(--primary-text);
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%; /* Makes the button full-width */
+  text-align: center;
+}
+
+.personal-info-btn:hover {
+  background-color: var(--primary-text);
+  color: var(--primary-background);
+}
+
+.personal-info-loading {
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--primary-text);
+}
+
+@media (max-width: 768px) {
+  .personal-info-container {
+      padding: 20px;
+  }
+
+  .personal-info-title {
+      font-size: 2rem;
+  }
+
+  .personal-info-input-field {
+      font-size: 0.9rem;
+  }
+
+  .personal-info-btn {
+      font-size: 0.9rem;
+      padding: 10px 18px;
+  }
+}
