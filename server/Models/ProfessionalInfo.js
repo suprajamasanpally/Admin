@@ -13,7 +13,7 @@ const ExperienceSchema = new mongoose.Schema({
 
 const ProfessionalInfoSchema = new mongoose.Schema({
   email: { type: String, required: true },
-  experiences: [ExperienceSchema], // Array of experiences
+  experiences: [ExperienceSchema], 
 });
 
 const ProfessionalInfoModel = mongoose.model('ProfessionalInfo', ProfessionalInfoSchema);

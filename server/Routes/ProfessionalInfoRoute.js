@@ -3,7 +3,6 @@ const router = express.Router();
 const ProfessionalInfo = require('../Models/ProfessionalInfo');
 const Field = require('../Models/Field');
 
-// Get fields for ProfessionalInfo
 router.get("/:email", async (req, res) => {
   try {
     const userInfo = await ProfessionalInfo.findOne({ email: req.params.email });
@@ -15,7 +14,7 @@ router.get("/:email", async (req, res) => {
   }
 });
 
-// Save or update professional info for a specific user
+
 router.post("/:email", async (req, res) => {
   try {
     const { email } = req.params;

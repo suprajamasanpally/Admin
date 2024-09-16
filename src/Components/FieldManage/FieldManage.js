@@ -17,16 +17,20 @@ const FieldManage = () => {
     required: false,
     visible: true,
     order: 0,
-    options: [], // Ensure this is always an array
+    options: [],
   });
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFields = async () => {
       setLoading(true);
+      const token = localStorage.getItem("token"); // Get the token from localStorage
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/fields/${selectedPage}`
+          `http://localhost:3001/api/fields/${selectedPage}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }, // Include token in headers
+          }
         );
         setFields(response.data);
       } catch (error) {
@@ -69,10 +73,14 @@ const FieldManage = () => {
 
   const handleAddField = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token"); // Get the token from localStorage
     try {
       await axios.post(
         `http://localhost:3001/api/fields/${selectedPage}`,
-        newField
+        newField,
+        {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in headers
+        }
       );
       setNewField({
         fieldName: "",
@@ -81,11 +89,14 @@ const FieldManage = () => {
         required: false,
         visible: true,
         order: 0,
-        options: [], // Reset options
+        options: [], 
       });
       setShowForm(false);
       const response = await axios.get(
-        `http://localhost:3001/api/fields/${selectedPage}`
+        `http://localhost:3001/api/fields/${selectedPage}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in headers
+        }
       );
       setFields(response.data);
     } catch (error) {
@@ -96,10 +107,14 @@ const FieldManage = () => {
 
   const handleUpdateField = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token"); // Get the token from localStorage
     try {
       await axios.put(
         `http://localhost:3001/api/fields/${editField._id}`,
-        newField
+        newField,
+        {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in headers
+        }
       );
       setNewField({
         fieldName: "",
@@ -108,12 +123,15 @@ const FieldManage = () => {
         required: false,
         visible: true,
         order: 0,
-        options: [], // Reset options
+        options: [], 
       });
       setShowForm(false);
       setEditField(null);
       const response = await axios.get(
-        `http://localhost:3001/api/fields/${selectedPage}`
+        `http://localhost:3001/api/fields/${selectedPage}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }, // Include token in headers
+        }
       );
       setFields(response.data);
     } catch (error) {
@@ -131,14 +149,17 @@ const FieldManage = () => {
       required: field.required || false,
       visible: field.visible || true,
       order: field.order || 0,
-      options: Array.isArray(field.options) ? field.options.join(", ") : "", // Ensure options is a string
+      options: Array.isArray(field.options) ? field.options.join(", ") : "", 
     });
     setShowForm(true);
   };
 
   const handleDeleteField = async (id) => {
+    const token = localStorage.getItem("token"); // Get the token from localStorage
     try {
-      await axios.delete(`http://localhost:3001/api/fields/${id}`);
+      await axios.delete(`http://localhost:3001/api/fields/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }, // Include token in headers
+      });
       setFields(fields.filter((field) => field._id !== id));
     } catch (error) {
       console.error("Error deleting field:", error);
@@ -149,6 +170,7 @@ const FieldManage = () => {
   const handleDone = () => {
     navigate("/superadmin-dashboard");
   };
+
 
   return (
     <div className="field-manage-container">
@@ -229,7 +251,7 @@ const FieldManage = () => {
             <label className="field-manage-label">
               Placeholder (optional):
               <textarea
-                name="options" // Reuse the options field for placeholder
+                name="options"
                 value={newField.options}
                 onChange={handleOptionsChange}
                 placeholder="e.g., Enter your text here..."

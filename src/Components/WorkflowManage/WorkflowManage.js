@@ -1,38 +1,54 @@
-import React, {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import axios from "axios";
 import "./WorkflowManage.css";
-
 
 const WorkflowManage = () => {
   const [pages, setPages] = useState([]);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token'); // Retrieve token from localStorage
 
   useEffect(() => {
-    const fetchPages = async () => {
+    const checkAuthorizationAndFetchPages = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/workflow");
-        console.log("Fetched workflow:", response.data);
-
-        // Check if response data is correctly formatted
-        if (response.data && Array.isArray(response.data.order)) {
-          setPages(
-            response.data.order.map((id) => ({
-              id,
-              content: getPageContent(id), // Set content based on id
-            }))
-          );
+        // Check authorization first
+        const response = await axios.get("http://localhost:3001/api/get-role", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data === "SuperAdmin") {
+          setIsAuthorized(true);
+  
+          // Fetch pages if authorized
+          const pagesResponse = await axios.get("http://localhost:3001/api/workflow", {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+  
+          console.log("Fetched workflow:", pagesResponse.data);
+  
+          if (pagesResponse.data && Array.isArray(pagesResponse.data.order)) {
+            setPages(
+              pagesResponse.data.order.map((id) => ({
+                id,
+                content: getPageContent(id),
+              }))
+            );
+          } else {
+            console.error("Unexpected response format:", pagesResponse.data);
+          }
         } else {
-          console.error("Unexpected response format:", response.data);
+          navigate("/unauthorized");
         }
       } catch (error) {
-        console.error("Error fetching workflow:", error);
+        console.error("Error:", error);
+        navigate("/unauthorized");
       }
     };
-
-    fetchPages();
-  }, []);
+  
+    checkAuthorizationAndFetchPages();
+  }, [navigate, token]);
+  
 
   const getPageContent = (id) => {
     switch (id) {
@@ -62,18 +78,28 @@ const WorkflowManage = () => {
   };
 
   const handleDone = () => {
-    // Save the updated workflow to the database
     axios
       .post("http://localhost:3001/api/workflow", {
         order: pages.map((page) => page.id),
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       })
       .then(() => {
         console.log("Workflow updated successfully");
-        navigate("/superadmin-dashboard"); // Navigate back to SuperAdminDashboard
+        navigate("/superadmin-dashboard"); // Ensure you're redirecting to the correct dashboard route
       })
-      .catch((error) => console.error("Error updating workflow:", error));
+      .catch((error) => {
+        console.error("Error updating workflow:", error);
+        if (error.response?.status === 403) {
+          navigate("/unauthorized");
+        }
+      });
   };
 
+  if (!isAuthorized) {
+    // Show loading or authorization message while checking authorization
+    return <div>Checking authorization...</div>;
+  }
 
   return (
     <div className="workflow-management">

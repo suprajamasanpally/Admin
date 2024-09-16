@@ -14,6 +14,7 @@ import DocumentUploadPage from "./Pages/DocumentUploadPage/DocumentUploadPage";
 import ThankyouPage from "./Pages/ThankyouPage/ThankyouPage";
 import TemplateManage from "./Components/TemplateManage/TemplateManage";
 import FieldManage from "./Components/FieldManage/FieldManage";
+import UnauthorizedPage from "./Pages/UnauthorizedPage";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/page-3" element={<ProfessionalInfoPage/>}></Route>
         <Route path="/page-4" element={<DocumentUploadPage/>}></Route>
         <Route path="/thank-you" element={<ThankyouPage/>}></Route>
+        <Route path="/unauthorized" element={<UnauthorizedPage/>}></Route>
       </Routes>
     </Router>
   );

@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const EmployeeModel = require("./Models/Employee");
 const PersonalInfoModel = require("./Models/PersonalInfo");
@@ -14,22 +16,13 @@ const TemplateRoute = require("./Routes/TemplateRoute");
 const ThemeRoute = require("./Routes/ThemeRoute");
 const FieldRoute = require("./Routes/FieldRoute");
 const EducationalInfoRoute = require("./Routes/EducationalInfoRoute");
-const ProfessionalInfoRoute = require('./Routes/ProfessionalInfoRoute');
+const ProfessionalInfoRoute = require("./Routes/ProfessionalInfoRoute");
+
+const { authenticate, requireSuperAdmin, requireRole } = require('./middlewares/auth');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-app.use('/api', WorkflowRoute);
-app.use('/api/v1/templates', TemplateRoute);
-app.use('/api', ThemeRoute);
-app.use('/api/fields', FieldRoute);
-app.use('/api/educational-info', EducationalInfoRoute);
-app.use('/api/professional-info', ProfessionalInfoRoute);
-
-
-const VALID_INVITATION_CODE = "7995731183";
-const JWT_SECRET = "your_jwt_secret";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -41,67 +34,103 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-mongoose
-  .connect("mongodb://localhost:27017/admin")
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => {
     console.error("MongoDB connection error:", err);
     process.exit(1);
   });
 
-app.post("/signup", async (req, res) => {
-  const { name, email, password, role, invitationCode } = req.body;
+// Predefined constants
+const SUPERADMIN_EMAILS = process.env.SUPERADMIN_EMAILS ? process.env.SUPERADMIN_EMAILS.split(",") : [];  // Predefined superadmin emails
+
+app.post('/signup', async (req, res) => {
+  const { name, email, password, role } = req.body;
+
   try {
-    if (role === "SuperAdmin") {
-      if (invitationCode !== VALID_INVITATION_CODE) {
-        return res.status(400).json({ error: "Invalid invitation code" });
-      }
+    // Ensure only allowed emails can register as SuperAdmin
+    if (role === 'SuperAdmin' && !SUPERADMIN_EMAILS.includes(email)) {
+      return res.status(403).json({ error: 'Unauthorized email for SuperAdmin signup' });
     }
+
+    // Default role to 'User' if not provided
+    const userRole = role || 'User';
+
+    // Check if user already exists
     const existingUser = await EmployeeModel.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: 'User already exists' });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new EmployeeModel({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    });
+    const newUser = new EmployeeModel({ name, email, password: hashedPassword, role: userRole });
     await newUser.save();
-    res.json({
-      status: "Success",
-      message: "User registered successfully. You can now log in.",
-    });
+
+    res.json({ status: 'Success' });
   } catch (err) {
-    console.error("Signup error:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Signup error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-app.post("/login", async (req, res) => {
+// Login route with JWT token generation
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await EmployeeModel.findOne({ email });
     if (!user) {
-      return res.status(404).json({ error: "No record existed" });
+      return res.status(404).json({ error: 'No record existed' });
     }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: "Wrong password" });
+      return res.status(400).json({ error: 'Wrong password' });
     }
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    res.json({ status: "Success", token, role: user.role, email: user.email });
+
+    // Generate a JWT token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ status: 'Success', role: user.role, email: user.email, token });
   } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Protected routes using authentication
+app.use("/api", authenticate);
+
+app.use("/api", WorkflowRoute);
+app.use("/api/v1/templates", TemplateRoute);
+app.use("/api", ThemeRoute);
+app.use("/api/fields", FieldRoute);
+app.use("/api/educational-info", EducationalInfoRoute);
+app.use("/api/professional-info", ProfessionalInfoRoute);
+
+// Protect route with SuperAdmin check
+app.get('/superadmin-dashboard', authenticate, requireSuperAdmin, (req, res) => {
+  res.send('SuperAdmin Dashboard');
+});
+
+
+// Protect route with UserAdmin check
+app.get('/useradmin-dashboard', authenticate, requireRole('UserAdmin'), (req, res) => {
+  res.send('UserAdmin Dashboard');
+});
+
+// Route to validate invitation code
+app.post('/validate-invitation-code', (req, res) => {
+  const { invitationCode } = req.body;
+
+  if (invitationCode === process.env.INVITATION_CODE) {
+    return res.json({ status: 'Success', message: 'Valid invitation code' });
+  } else {
+    return res.status(401).json({ status: 'Failed', error: 'Invalid invitation code' });
   }
 });
 
 app.post("/api/personal-info", (req, res) => {
-  console.log("Request Body:", req.body);  // Log the incoming request body
   const { email, ...personalInfo } = req.body;
   if (!email) {
     return res.status(400).json({ error: "Email is required" });
@@ -127,8 +156,6 @@ app.post(
     { name: "resume", maxCount: 1 },
   ]),
   (req, res) => {
-    console.log("Request Body:", req.body);  // Log the incoming request body
-    console.log("Files:", req.files);  // Log the uploaded files
     const email = req.body.email;
     if (!email) {
       return res.status(400).json({ error: "Email is required" });
@@ -162,10 +189,14 @@ app.post(
       resume: req.files.resume ? req.files.resume[0].filename : null,
     };
 
-    DocumentUploadModel.findOneAndUpdate({ email }, { documents: documentData }, {
-      upsert: true,
-      new: true,
-    })
+    DocumentUploadModel.findOneAndUpdate(
+      { email },
+      { documents: documentData },
+      {
+        upsert: true,
+        new: true,
+      }
+    )
       .then((result) => res.json(result))
       .catch((err) => {
         console.error("Documents Upload error:", err);
@@ -173,7 +204,6 @@ app.post(
       });
   }
 );
-
 
 
 app.listen(3001, () => {

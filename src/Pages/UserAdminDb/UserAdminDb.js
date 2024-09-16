@@ -6,13 +6,14 @@ import "./UserAdminDb.css";
 const UserAdminDb = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email } = location.state || {}; // Get email from state
+  const { email } = location.state || {}; 
   const [workflow, setWorkflow] = useState([]);
 
   useEffect(() => {
-    // Fetch workflow
     axios
-      .get("http://localhost:3001/api/workflow")
+      .get("http://localhost:3001/api/workflow", {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } // Include token in headers
+      })
       .then((response) => {
         if (response.data && response.data.order) {
           setWorkflow(response.data.order);
@@ -25,17 +26,17 @@ const UserAdminDb = () => {
 
   const handleFillDetails = () => {
     if (workflow && workflow.length > 0) {
-      const firstPageId = workflow[0]; // Get the first page ID from the workflow
+      const firstPageId = workflow[0]; 
       navigate(`/page-${firstPageId}`, { state: { email, workflow } });
     } else {
       console.error("Workflow is not defined or is empty.");
-      navigate("/error"); // Redirect to an error page if workflow is not defined
+      navigate("/error"); 
     }
   };
 
   return (
     <div className="userpage">
-      <h1>Hello {email}, Welcome to the Home!</h1>
+      <h1>Hello {email ? email : "User"}, Welcome to the Home!</h1>
       <button onClick={handleFillDetails} className="btn">
         Fill in Details
       </button>

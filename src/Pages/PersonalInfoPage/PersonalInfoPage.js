@@ -15,8 +15,14 @@ const PersonalInfoPage = () => {
   useEffect(() => {
     const fetchFields = async () => {
       try {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem('token');
+
         const response = await axios.get(
-          `http://localhost:3001/api/fields/PersonalInfo`
+          `http://localhost:3001/api/fields/PersonalInfo`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
         );
         setFields(response.data);
         setLoading(false);
@@ -34,7 +40,7 @@ const PersonalInfoPage = () => {
     return <div>Workflow not provided.</div>;
   }
 
-  const currentPageId = "1"; // Assuming this is the ID for Personal Info Page
+  const currentPageId = "1"; 
   const currentPageIndex = workflow.indexOf(currentPageId);
 
   const handleInputChange = (field, value) => {
@@ -44,10 +50,19 @@ const PersonalInfoPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post("http://localhost:3001/api/personal-info", {
-        email,
-        ...formData,
-      });
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem('token');
+
+      await axios.post(
+        "http://localhost:3001/api/personal-info",
+        {
+          email,
+          ...formData,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
       const nextPageIndex = currentPageIndex + 1;
       const nextPageId = workflow[nextPageIndex];
       if (nextPageId) {

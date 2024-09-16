@@ -13,7 +13,7 @@ router.get('/templates', async (req, res) => {
   }
 });
 
-// Add a new template
+//creates a new template
 router.post('/templates', async (req, res) => {
   const { name, content } = req.body;
 
@@ -27,7 +27,7 @@ router.post('/templates', async (req, res) => {
   }
 });
 
-// Update an existing template
+// Update the template
 router.put('/templates/:id', async (req, res) => {
   const { id } = req.params;
   const { name, content } = req.body;

@@ -15,9 +15,22 @@ const TemplateManage = () => {
   };
 
   const handleApplyTheme = async () => {
+    const token = localStorage.getItem('token'); // Retrieve token from localStorage
+    if (!token) {
+      setMessage('Authentication required');
+      return;
+    }
     try {
-      await axios.post('http://localhost:3001/api/themes', { theme: selectedTheme });
-      localStorage.setItem('theme', selectedTheme);  // Store selected theme in localStorage
+      await axios.post(
+        'http://localhost:3001/api/themes', 
+        { theme: selectedTheme },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // Add token to the request header
+          }
+        }
+      );
+      localStorage.setItem('theme', selectedTheme);
       setMessage('Theme applied successfully');
       navigate("/superadmin-dashboard");
     } catch (error) {
@@ -25,6 +38,7 @@ const TemplateManage = () => {
       setMessage('Error applying theme');
     }
   };
+  
 
   return (
     <div className="template-management">

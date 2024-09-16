@@ -17,12 +17,18 @@ const ProfessionalInfoPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Retrieve the token from localStorage or wherever you store it
+        const token = localStorage.getItem('token');
+  
         const response = await axios.get(
-          `http://localhost:3001/api/professional-info/${email}`
+          `http://localhost:3001/api/professional-info/${email}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
         );
+  
         setFields(response.data.fields);
-
-        // Format the date fields in professionalInfo
+  
         const formattedProfessionalInfo =
           response.data.userInfo?.experiences || [];
         formattedProfessionalInfo.forEach((exp) => {
@@ -32,7 +38,7 @@ const ProfessionalInfoPage = () => {
             }
           });
         });
-
+  
         setProfessionalInfo({ experiences: formattedProfessionalInfo });
       } catch (error) {
         console.error("Error fetching professional info:", error);
@@ -43,7 +49,7 @@ const ProfessionalInfoPage = () => {
     };
     fetchData();
   }, [email]);
-
+  
   const formatDateString = (dateString) => {
     return dateString ? new Date(dateString).toISOString().split("T")[0] : "";
   };
@@ -73,9 +79,13 @@ const ProfessionalInfoPage = () => {
   const handleSave = async (event) => {
     event.preventDefault();
     try {
+      const token = localStorage.getItem('token');
       await axios.post(
         `http://localhost:3001/api/professional-info/${email}`,
-        professionalInfo
+        professionalInfo,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
       const nextPageIndex = currentPageIndex + 1;
       const nextPageId = workflow[nextPageIndex];
@@ -89,6 +99,7 @@ const ProfessionalInfoPage = () => {
       setError("Failed to save professional info. Please try again later.");
     }
   };
+  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;

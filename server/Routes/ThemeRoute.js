@@ -7,7 +7,7 @@ router.post('/themes', (req, res) => {
   const { theme } = req.body;
 
   // Validate and apply the theme here
-  if (theme && ['black', 'pink', 'lavender', 'light', 'dark'].includes(theme)) {
+  if (theme && ['black', 'pink', 'lavender', 'light', 'dark', 'default'].includes(theme)) {
     // You can store the theme in a database or in-memory store
     // For simplicity, we will just log the theme
     console.log(`Theme received: ${theme}`);

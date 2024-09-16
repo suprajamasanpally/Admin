@@ -3,7 +3,6 @@ const router = express.Router();
 const EducationalInfo = require('../Models/EducationalInfo');
 const Field = require('../Models/Field'); 
 
-// Get fields for EducationalInfo
 router.get("/:email", async (req, res) => {
   try {
     const userInfo = await EducationalInfo.findOne({ email: req.params.email });
@@ -14,7 +13,7 @@ router.get("/:email", async (req, res) => {
   }
 });
 
-// Save or update educational info for a specific user
+
 router.post("/:email", async (req, res) => {
   try {
     const { email } = req.params;

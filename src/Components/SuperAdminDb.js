@@ -4,10 +4,18 @@ import "./SuperAdminDb.css";
 
 const SuperAdminDb = () => {
   const navigate = useNavigate();
+  const role = localStorage.getItem('role'); // Get role from localStorage
+
+  if (role !== 'SuperAdmin') {
+    return <div>Access Denied</div>;
+  }
 
   const handleNavigation = (path, page) => {
     navigate(path, { state: { page } });
   };
+
+
+
   return (
     <div className="s-dashboard">
       <h1>SuperAdmin Dashboard</h1>

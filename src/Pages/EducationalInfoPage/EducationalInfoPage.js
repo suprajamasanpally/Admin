@@ -18,12 +18,17 @@ const EducationalInfoPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem('token');
+
         const response = await axios.get(
-          `http://localhost:3001/api/educational-info/${email}`
+          `http://localhost:3001/api/educational-info/${email}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
         );
         setFields(response.data.fields);
 
-        // Format the date fields in educationalInfo
         const formattedEducationalInfo = response.data.userInfo?.fields || {};
         Object.keys(formattedEducationalInfo).forEach((key) => {
           if (key.toLowerCase().includes("date")) {
@@ -35,7 +40,6 @@ const EducationalInfoPage = () => {
 
         setEducationalInfo(formattedEducationalInfo);
 
-        // Format the date fields in certifications
         const formattedCertifications =
           response.data.userInfo?.certifications || [];
         formattedCertifications.forEach((certification) => {
@@ -86,10 +90,16 @@ const EducationalInfoPage = () => {
   const handleSave = async (event) => {
     event.preventDefault();
     try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem('token');
+
       const dataToSave = { ...educationalInfo, certifications };
       await axios.post(
         `http://localhost:3001/api/educational-info/${email}`,
-        dataToSave
+        dataToSave,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
       const nextPageIndex = currentPageIndex + 1;
       const nextPageId = workflow[nextPageIndex];

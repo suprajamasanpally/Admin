@@ -6,7 +6,7 @@ const TemplateSchema = new mongoose.Schema({
     required: true,
   },
   content: {
-    type: mongoose.Schema.Types.Mixed, // For more flexibility in content
+    type: mongoose.Schema.Types.Mixed, 
     required: true,
   },
 });

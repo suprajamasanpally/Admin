@@ -40,7 +40,7 @@ const handleSave = (event) => {
   event.preventDefault();
 
   const formData = new FormData();
-  formData.append('email', email);  // Ensure email is added
+  formData.append('email', email);  
   for (const [key, value] of Object.entries(documents)) {
     if (key === "resume") {
       formData.append(key, value);
