@@ -9,7 +9,6 @@ const TemplateManage = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-
   const handleThemeChange = (theme) => {
     setSelectedTheme(theme);
   };
@@ -22,7 +21,7 @@ const TemplateManage = () => {
     }
     try {
       await axios.post(
-        'http://localhost:3001/api/themes', 
+        'http://localhost:3001/api/themes',
         { theme: selectedTheme },
         {
           headers: {
@@ -39,7 +38,6 @@ const TemplateManage = () => {
     }
   };
   
-
   return (
     <div className="template-management">
       <h2>Template Management</h2>

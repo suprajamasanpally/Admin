@@ -4,21 +4,36 @@ const WorkflowModel = require('../Models/Workflow');
 const EmployeeModel = require('../Models/Employee');
 const { requireSuperAdmin, authenticate } = require('../middlewares/auth');
 
-// Fetches the current workflow order
+// Fetch the latest workflow version
 router.get('/workflow', authenticate, async (req, res) => {
   try {
-    const workflow = await WorkflowModel.findOne();
+    const workflow = await WorkflowModel.findOne().sort({ updatedAt: -1 }); // Get the latest version
+    if (!workflow) {
+      return res.status(404).json({ error: 'No workflow found' });
+    }
     res.status(200).json(workflow);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch workflow' });
   }
 });
 
-// Saves or updates the workflow order
+// Save or update the workflow order, triggering version increment
 router.post('/workflow', requireSuperAdmin, async (req, res) => {
   try {
     const { order } = req.body;
-    const workflow = await WorkflowModel.findOneAndUpdate({}, { order }, { new: true, upsert: true });
+    let workflow = await WorkflowModel.findOne();
+
+    if (workflow) {
+      // If workflow exists, update it
+      workflow.order = order;
+    } else {
+      // If no workflow exists, create a new one
+      workflow = new WorkflowModel({ order });
+    }
+
+    // Save the workflow, pre-save hook will increment the version
+    await workflow.save();
+    
     res.status(200).json(workflow);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update workflow' });

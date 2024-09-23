@@ -19,6 +19,10 @@ const fieldSchema = new mongoose.Schema({
   options: {
     type: [String], 
     default: [] 
+  },
+  version: { 
+    type: String, 
+    default: "1.0.0"  // Set default version to 1.0.0 for newly created fields
   }
 });
 

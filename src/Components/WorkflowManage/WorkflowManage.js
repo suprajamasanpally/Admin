@@ -14,10 +14,11 @@ const WorkflowManage = () => {
     const checkAuthorizationAndFetchPages = async () => {
       try {
         // Check authorization first
-        const response = await axios.get("http://localhost:3001/api/get-role", {
+        const roleResponse = await axios.get("http://localhost:3001/api/get-role", {
           headers: { Authorization: `Bearer ${token}` }
         });
-        if (response.data === "SuperAdmin") {
+  
+        if (roleResponse.data === "SuperAdmin") {
           setIsAuthorized(true);
   
           // Fetch pages if authorized
@@ -26,6 +27,7 @@ const WorkflowManage = () => {
           });
   
           console.log("Fetched workflow:", pagesResponse.data);
+          console.log("Workflow version:", pagesResponse.data.version);  // Log version
   
           if (pagesResponse.data && Array.isArray(pagesResponse.data.order)) {
             setPages(

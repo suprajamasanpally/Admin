@@ -11,7 +11,8 @@ const PersonalInfoSchema = new mongoose.Schema({
     addressType: String,
     address: String,
     age: Number,
-    maritalStatus: String
+    maritalStatus: String,
+    mole: String
 });
 
 const PersonalInfoModel = mongoose.model('personalinfos', PersonalInfoSchema);
